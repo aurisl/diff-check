@@ -19,6 +19,7 @@
 
 package io.github.yangziwen.checkstyle;
 
+import com.puppycrawl.tools.checkstyle.api.Violation;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -71,7 +72,6 @@ import com.puppycrawl.tools.checkstyle.api.AuditListener;
 import com.puppycrawl.tools.checkstyle.api.AutomaticBean;
 import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
 import com.puppycrawl.tools.checkstyle.api.Configuration;
-import com.puppycrawl.tools.checkstyle.api.LocalizedMessage;
 import com.puppycrawl.tools.checkstyle.api.RootModule;
 import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
 
@@ -82,8 +82,6 @@ import io.github.yangziwen.diff.calculate.DiffEntryWrapper;
 /**
  * Wrapper command line program for the Checker.
  * @noinspection UseOfSystemOutOrSystemErr
- **/
-/**
  * Wrapper command line program for the Checker.
  * @noinspection UseOfSystemOutOrSystemErr
  **/
@@ -306,10 +304,10 @@ public final class Main {
             // two ifs exist till https://github.com/hcoles/pitest/issues/377
             if (errorCounter != 0) {
                 if (!cliViolations) {
-                    final LocalizedMessage errorCounterMessage = new LocalizedMessage(1,
+                    final Violation errorCounterMessage = new Violation(1,
                             Definitions.CHECKSTYLE_BUNDLE, ERROR_COUNTER,
                             new String[] {String.valueOf(errorCounter)}, null, Main.class, null);
-                    System.out.println(errorCounterMessage.getMessage());
+                    System.out.println(errorCounterMessage.getViolation());
                 }
             }
             if (exitStatus != 0) {
@@ -703,10 +701,10 @@ public final class Main {
             properties.load(stream);
         }
         catch (final IOException ex) {
-            final LocalizedMessage loadPropertiesExceptionMessage = new LocalizedMessage(1,
+            final Violation loadPropertiesExceptionMessage = new Violation(1,
                     Definitions.CHECKSTYLE_BUNDLE, LOAD_PROPERTIES_EXCEPTION,
                     new String[] {file.getAbsolutePath()}, null, Main.class, null);
-            throw new CheckstyleException(loadPropertiesExceptionMessage.getMessage(), ex);
+            throw new CheckstyleException(loadPropertiesExceptionMessage.getViolation(), ex);
         }
 
         return properties;
@@ -737,11 +735,11 @@ public final class Main {
             listener = new DefaultLogger(out, closeOutputStreamOption);
         }
         else {
-            final LocalizedMessage outputFormatExceptionMessage = new LocalizedMessage(1,
+            final Violation outputFormatExceptionMessage = new Violation(1,
                     Definitions.CHECKSTYLE_BUNDLE, CREATE_LISTENER_EXCEPTION,
                     new String[] {format, PLAIN_FORMAT_NAME, XML_FORMAT_NAME}, null,
                     Main.class, null);
-            throw new IllegalStateException(outputFormatExceptionMessage.getMessage());
+            throw new IllegalStateException(outputFormatExceptionMessage.getViolation());
         }
 
         return listener;

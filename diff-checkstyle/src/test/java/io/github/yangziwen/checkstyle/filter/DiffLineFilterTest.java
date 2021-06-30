@@ -1,5 +1,6 @@
 package io.github.yangziwen.checkstyle.filter;
 
+import com.puppycrawl.tools.checkstyle.api.Violation;
 import java.util.Arrays;
 
 import org.eclipse.jgit.diff.Edit;
@@ -11,14 +12,13 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import com.puppycrawl.tools.checkstyle.api.AuditEvent;
-import com.puppycrawl.tools.checkstyle.api.LocalizedMessage;
 import com.puppycrawl.tools.checkstyle.checks.whitespace.EmptyLineSeparatorCheck;
 
 import io.github.yangziwen.checkstyle.filter.DiffLineFilter;
 import io.github.yangziwen.diff.calculate.DiffEntryWrapper;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ AuditEvent.class, LocalizedMessage.class, Edit.class })
+@PrepareForTest({ AuditEvent.class, Violation.class, Edit.class })
 public class DiffLineFilterTest {
 
     @Test
@@ -52,13 +52,13 @@ public class DiffLineFilterTest {
         int beginB = 5;
         int endB = 9;
 
-        LocalizedMessage message = PowerMockito.mock(LocalizedMessage.class);
+        Violation message = PowerMockito.mock(Violation.class);
         PowerMockito.doReturn(EmptyLineSeparatorCheck.class.getName()).when(message).getSourceName();
 
         AuditEvent event = PowerMockito.mock(AuditEvent.class);
         PowerMockito.doReturn(fileName).when(event).getFileName();
         PowerMockito.doReturn(lineNum).when(event).getLine();
-        PowerMockito.doReturn(message).when(event).getLocalizedMessage();
+        PowerMockito.doReturn(message).when(event).getViolation();
 
         Edit edit = PowerMockito.mock(Edit.class);
         PowerMockito.doReturn(beginB).when(edit).getBeginB();
